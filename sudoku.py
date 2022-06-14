@@ -3,17 +3,14 @@ from random import randint, choice
 import os
 from time import sleep
 import string
-import pytube # new change another change
 #create empty board
 EMPTY = '#'
 # what percentage of the board is filled
-# testing git branches
-# small change testing my git knowledge
 PFILLED = 20
 empty_cells = {}
 FILLED = '*'
 # VALUES = list(range(1,10))
-VALUES = list(string.ascii_uppercase[0:25])
+VALUES = list(string.ascii_uppercase[0:9])
 board = [[EMPTY for _ in range(len(VALUES))] for _ in range(len(VALUES))]
 grid_len = int((len(board)**0.5))
 pset = {}
@@ -122,20 +119,35 @@ def gen_pset():
             if board[row][col] == EMPTY:
                 for value in VALUES:
                     if check_criteria(value, row, col):
-                        draw_board()
-                        print(row,col,value)
                         empty_cells[row][col].append(value)
+                # the single candidate
                 if len(empty_cells[row][col]) == 1:
+<<<<<<< HEAD
                     # got a singleton
                     print('GOT A SINGLETON')
                     # sleep(4)
+=======
+>>>>>>> new
                     board[row][col] = empty_cells[row][col][0]
                     del empty_cells[row][col]
                 elif len(empty_cells[row][col]) == 0:
                     # board is unsolvable
                     # probabaly too many prefilled cells
                     print('board is unsolvable')
+    # the single position
+    for row in empty_cells:
+        value_map = {value:[0,[]] for value in VALUES}
+        for cell in empty_cells[row]:
+            for value in empty_cells[row][cell]:
+                value_map[value][0] += 1
+                value_map[value][1].append(cell)
+        for value in value_map:
+            if value_map[value][0] == 1: # got a single position
+                board[row][value_map[value][1][0]] = value
+                del empty_cells[row][value_map[value][1][0]]
+
     # naked pair logic goes here
+
 
     # hidden pair logic goes here
 
@@ -143,7 +155,6 @@ def gen_pset():
 
     # hidden tripple logic goes here
 
-    print(empty_cells)
 
 def solve_board():
     global board, empty_cells, EMPTY, tFILLED
