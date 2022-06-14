@@ -123,9 +123,12 @@ def gen_pset():
                 # the single candidate
                 if len(empty_cells[row][col]) == 1:
 <<<<<<< HEAD
+<<<<<<< HEAD
                     # got a singleton
                     print('GOT A SINGLETON')
                     # sleep(4)
+=======
+>>>>>>> new
 =======
 >>>>>>> new
                     board[row][col] = empty_cells[row][col][0]
