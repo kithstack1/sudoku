@@ -3,7 +3,6 @@ from random import randint, choice
 import os
 from time import sleep
 import string
-import pytube # new change another change
 #create empty board
 EMPTY = '#'
 # what percentage of the board is filled
@@ -12,7 +11,7 @@ PFILLED = 20
 empty_cells = {}
 FILLED = '*'
 # VALUES = list(range(1,10))
-VALUES = list(string.ascii_uppercase[0:25])
+VALUES = list(string.ascii_uppercase[0:9])
 board = [[EMPTY for _ in range(len(VALUES))] for _ in range(len(VALUES))]
 grid_len = int((len(board)**0.5))
 pset = {}
@@ -140,6 +139,7 @@ def gen_pset():
         for value in value_map:
             if value_map[value][0] == 1: # got a single position
                 board[row][value_map[value][1][0]] = value
+                del empty_cells[row][value_map[value][1][0]]
 
     # naked pair logic goes here
 
@@ -150,7 +150,6 @@ def gen_pset():
 
     # hidden tripple logic goes here
 
-    print(empty_cells)
 
 def solve_board():
     global board, empty_cells, EMPTY, tFILLED
