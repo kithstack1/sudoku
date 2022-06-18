@@ -226,10 +226,12 @@ def single_position():
                             value_map[value][1].append((r,c))
         for value in value_map:
             if value_map[value][0] == 1: 
-                board[row][value_map[value][1][0]] = value
-                # delete the cell from empty_cells hash map
                 cell = value_map[value][1][0][1]
+                board[row][cell] = value
+                # delete the cell from empty_cells hash map
                 try:
+                   print('works like a gem')
+                   sleep(34)
                    del empty_cells[row][cell]
                 except Exception as e:
                     print('error',e,empty_cells[row],cell)
