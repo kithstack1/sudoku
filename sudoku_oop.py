@@ -8,7 +8,7 @@ import string
 
 # the set of values used for the sudoku , could be letters or numbers , or anything else
 # none of these should be repeated , like i said , it is a set .. allowed set lengths are 9,16,12,25,100[the mega sudoku]
-VALUES = list(string.ascii_uppercase[0:16])
+VALUES = list(string.ascii_uppercase[0:9])
 # a var to mark the cells for solving
 EMPTY = '#'
 # the sudoku board , it will be a list of lists{length of each will be the length of the values set}
@@ -16,7 +16,7 @@ EMPTY = '#'
 # each list representing a row , all lists of equal length # and each index in list representing a cell ie intersection of a row and a column 
 board = [[EMPTY for _ in range(len(VALUES))] for _ in range(len(VALUES))]
 # what percentage of the board is has givens 
-PFILLED = 20
+PFILLED = 5
 PFILLED = int((len(board)**2)*(PFILLED/100))
 empty_cells = {}
 # the FILLED var will be used by the givens generator code to know which
@@ -102,14 +102,13 @@ def prefill():
                 for value in VALUES:
                     if is_valid(value, row, col):
                         board[row][col] = value
-                        prefill()
+                        yield from prefill()
                         board[row][col] = '*'
                 return
-    if num == 0:
-        pset_init()
-        gen_pset()
-        num += 1
-    solve_board()
+    pset_init()
+    gen_pset()
+    print('GENERATED BOARD')
+    yield(draw_board())
 
 
 # the init_board fn marks with asterisks the cells that will be filled with givens
@@ -177,6 +176,23 @@ def naked_tripple():
 def hidden_tripple():
     pass
 
+# locked candidate logic goes  here
+# only candidate in the block in one row or column
+def locked_candidate_1():
+    global board, empty_cells, VALUES
+    blocks = get_blocks()
+    for block in blocks:
+        row, col = block[0], block[1]
+
+# the locked candidate type 2 ( only candidate in the row or column in one block)
+def locked_candidate_2():
+    global board, empty_cells, VALUES
+    pass
+
+# the x wing logic goes here
+def x_wing():
+    global board, empty_cells, VALUES
+    pass
 
 # the single position optimisation
 def single_position():
@@ -230,7 +246,7 @@ def single_position():
                 board[row][cell] = value
                 # delete the cell from empty_cells hash map
                 try:
-                   print('works like a gem')
+                   print('works like a charm')
                    sleep(34)
                    del empty_cells[row][cell]
                 except Exception as e:
@@ -269,7 +285,7 @@ def update_pset(row, col, value):
     for r in empty_cells:
         try:
             empty_cells[r][col].remove(value)
-        # just in case the r, c intersection isn't empty in any row among the empty_cells
+        # just in case the r, c intersection isn't empty in any row for this empty cell
         except Exception as e:
             continue
 
@@ -295,16 +311,18 @@ def solve_board():
                 for value in empty_cells[row][col]: 
                     if is_valid(value,row,col):
                         board[row][col] = value
-                        solve_board()
+                        yield from solve_board()
                         board[row][col] = EMPTY
                 return # all values incompatible , return to parent caller
     print('board is solved , no more empty slots')
-    draw_board()
-    input('more ?') # output more solutions if there is any
+    yield(draw_board())
 
 def main():
     init_board()
-    prefill()
+    gen = prefill()
+    next(gen)
+    soln = solve_board()
+    next(soln)
 
 
 
@@ -346,4 +364,7 @@ class Sudoku:
         pass
 
     def make_pset(self):
+        pass
+
+    def get_blocks(self):
         pass
