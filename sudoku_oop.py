@@ -18,7 +18,8 @@ class Sudoku:
         self.empty_cells = {}
         self.board = [[self.EMPTY for _ in range(len(self.values))] for _ in range(len(self.values))]
         self.blocks = self.get_blocks() 
-
+        self.lastcol = 0
+        self.lastrow = 0
 
     def draw_board(self):
         for i in range(self.width):
@@ -152,13 +153,12 @@ class Sudoku:
                     for value in self.empty_cells[row][col]: 
                         if self.is_valid(value,row,col):
                             self.board[row][col] = value
-                            self.solve_board()
+                            yield from self.solve_board()
                             self.board[row][col] = self.EMPTY
+                    self.lastrow, self.lastcol = row, col
                     return # all values incompatible , return to parent caller
-            print('invalid board')
         print('board is solved , no more empty slots')
-        self.draw_board()
-        input('more')
+        yield(self.draw_board())
 
 
     def get_blocks(self):
@@ -171,7 +171,7 @@ class Sudoku:
         return blocks
 
 
-values = list(string.ascii_uppercase)[:9]
+values = list(string.ascii_uppercase)[:16]
 app = Sudoku(pfilled=20,values=values)
 
 
@@ -184,9 +184,11 @@ if __name__ == '__main__':
     app.generate_candidate_set()
     tricks = Tricks(app)
     app.board, app.empty_cells = tricks.single_position()
-    
-    
-    app.solve_board()
+    try:
+        (next(app.solve_board()))
+    except Exception:
+        print('Board is invalid')
+        print(f'stopped at row:{app.lastrow}| col:{app.lastcol}')
 
 
 

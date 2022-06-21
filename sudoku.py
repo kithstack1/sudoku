@@ -7,8 +7,9 @@ import string
 EMPTY = '#'
 # what percentage of the board is filled
 PFILLED = 20
-empty_cells = {}
-FILLED = '*'
+# the set of values used for the sudoku , could be letters or numbers , or anything else
+# none of these should be repeated , like i said , it is a set .. allowed set lengths are 9,16,12,25,100[the mega sudoku]
+VALUES = list(string.ascii_uppercase[0:9])
 # the sudoku board , it will be a list of lists{length of each will be the length of the values set}
 # each list representing a row , all lists of equal length 
 # each list representing a row , all lists of equal length # and each index in list representing a cell ie intersection of a row and a column 
@@ -20,9 +21,6 @@ empty_cells = {}
 # the FILLED var will be used by the givens generator code to know which
 # cells to fill and which cells not to fill
 FILLED = '*'
-# the set of values used for the sudoku , could be letters or numbers , or anything else
-# none of these should be repeated , like i said , it is a set .. allowed set lengths are 9,16,12,25,100[the mega sudoku]
-VALUES = list(string.ascii_uppercase[0:9])
 # this will represent the height and width of the small blocks within the sudoku
 # eg a 9 by 9 sudoku has 3 by 3 bloacks in it ... 3 being the sqrt of 9___
 grid_len = int((len(board)**0.5))
@@ -102,14 +100,12 @@ def prefill():
                 for value in VALUES:
                     if is_valid(value, row, col):
                         board[row][col] = value
-                        prefill()
+                        yield from prefill()
                         board[row][col] = '*'
                 return
-    if num == 0:
-        pset_init()
-        gen_pset()
-        num += 1
-    solve_board()
+    pset_init()
+    gen_pset()
+    yield(draw_board())
 
 
 # THE init_board fn marks with asterisks the cells that will be filled with givens
@@ -198,8 +194,9 @@ def solve_board():
 
 def main():
     init_board()
-    prefill()
-
+    d = prefill()
+    next(d)
+    solve_board()
 
 
 if __name__ == '__main__':

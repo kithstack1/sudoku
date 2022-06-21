@@ -13,7 +13,6 @@ class Tricks:
     def single_position(self):
         # check row
         for row in self.empty_cells:
-            print('working on row:',row)
             value_map = {value:[0,[]] for value in self.values}
             for column in self.empty_cells[row]:
                 for value in self.empty_cells[row][column]:
@@ -26,7 +25,6 @@ class Tricks:
                     # delete the cell from empty_cells hash map
                     
                     try:
-                       print('last check',self.empty_cells[row][column])
                        del self.empty_cells[row][column]
                     except Exception:
                         pass
@@ -44,7 +42,6 @@ class Tricks:
                         value_map[value][1].append(row)
             for value in value_map:
                 if value_map[value][0] == 1:
-                   print('col check hit')
                    row = value_map[value][1][0]
                    self.board[row][column] = value
                    del self.empty_cells[row][column]
@@ -62,9 +59,7 @@ class Tricks:
                                 value_map[value][1].append((r,c))
             for value in value_map:
                 if value_map[value][0] == 1: 
-                    print('block check hit')
                     cell_cord = value_map[value][1][0]
-                    print(cell_cord)
                     r,c = cell_cord[0], cell_cord[1]
                     self.board[r][c] = value
                     # delete the cell from empty_cells hash map
