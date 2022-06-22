@@ -18,8 +18,6 @@ class Sudoku:
         self.empty_cells = {}
         self.board = [[self.EMPTY for _ in range(len(self.values))] for _ in range(len(self.values))]
         self.blocks = self.get_blocks() 
-        self.lastcol = 0
-        self.lastrow = 0
 
     def draw_board(self):
         for i in range(self.width):
@@ -175,8 +173,7 @@ values = list(string.ascii_uppercase)[:9]
 app = Sudoku(pfilled=20,values=values)
 
 
-
-if __name__ == '__main__':
+def main():
     gui = GUI(app)
     gui.app.initialize_board()
     next(gui.app.fill_givens())
@@ -187,9 +184,12 @@ if __name__ == '__main__':
     gui.app.generate_candidate_set()
     tricks = Tricks(gui.app)
     gui.app.board, gui.app.empty_cells = tricks.single_position()
-    gui.clear_frame()
-    gui.make_entries()
     gui.mainloop()
+
+
+if __name__ == '__main__':
+   main()
+ 
 
 
 

@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import  ttk
+from sudoku_tricks import Tricks
 
 
 
@@ -7,7 +8,7 @@ from tkinter import  ttk
 
 class GUI(tk.Tk):
 
-    def __init__(self,app,*args,**kwargs):
+    def __init__(self,app):
         super().__init__()
         self.app = app
         self.appwidth = 800
@@ -45,6 +46,7 @@ class GUI(tk.Tk):
         # time label
         self.time_label = tk.Label(self,font=('monospace 30 bold'))
         self.time_label.place(relx=.2,y=11)
+        self.timer = ''
 
 
     def time(self):
@@ -54,7 +56,7 @@ class GUI(tk.Tk):
         count_secs = count_secs if len(str(count_secs)) > 1 else f'0{count_secs}'
         new_time = f'time: |{count_mins}:{count_secs}|'
         self.time_label.config(text=new_time)
-        self.time_label.after(1000,self.time)
+        self.timer = self.time_label.after(1000,self.time)
         self.count += 1
 
     def make_entries(self):
@@ -78,8 +80,22 @@ class GUI(tk.Tk):
        
 
     def reset(self):
-        self.app.__init__()
-        self.__init__(self.app)
+        self.board = [['*' for _ in range(9)] for _ in range(9)]
+        self.app.board = self.board
+        self.app.emptycells = {}
+        self.app.initialize_board()
+        next(self.app.fill_givens())
+        # kill timer
+        self.time_label.after_cancel(self.timer)
+        self.clear_frame()
+        self.make_entries()
+        self.count = 0
+        self.time()
+        self.app.initialize_candidate_set()
+        self.app.generate_candidate_set()
+        tricks = Tricks(self.app)
+        self.app.board, self.app.empty_cells = tricks.single_position()
+        
 
     def clear_frame(self):
         for widget in self.board_frame.winfo_children():
