@@ -1,7 +1,7 @@
 from random import randint
 from sudoku_tricks import Tricks
 import string
-from gui_test import GUI
+from sudoku_gui import GUI
 
 
 class Sudoku:
