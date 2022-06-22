@@ -1,7 +1,7 @@
 from random import randint
 from sudoku_tricks import Tricks
 import string
-
+from gui_test import GUI
 
 
 class Sudoku:
@@ -171,24 +171,25 @@ class Sudoku:
         return blocks
 
 
-values = list(string.ascii_uppercase)[:16]
+values = list(string.ascii_uppercase)[:9]
 app = Sudoku(pfilled=20,values=values)
 
 
 
 if __name__ == '__main__':
-    app.initialize_board()
-    next(app.fill_givens())
-    app.draw_board()
-    app.initialize_candidate_set()
-    app.generate_candidate_set()
-    tricks = Tricks(app)
-    app.board, app.empty_cells = tricks.single_position()
-    try:
-        (next(app.solve_board()))
-    except Exception:
-        print('Board is invalid')
-        print(f'stopped at row:{app.lastrow}| col:{app.lastcol}')
+    gui = GUI(app)
+    gui.app.initialize_board()
+    next(gui.app.fill_givens())
+    #gui.app.draw_board()
+    gui.make_entries()
+    gui.time()
+    gui.app.initialize_candidate_set()
+    gui.app.generate_candidate_set()
+    tricks = Tricks(gui.app)
+    gui.app.board, gui.app.empty_cells = tricks.single_position()
+    gui.clear_frame()
+    gui.make_entries()
+    gui.mainloop()
 
 
 
