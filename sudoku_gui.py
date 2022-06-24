@@ -73,11 +73,12 @@ class GUI(tk.Tk):
     def solve(self):
         try:
            next(self.app.solve_board())
-           self.clear_frame()
-           self.make_entries()
         except:
-            print('Board is Invalid')
-       
+            print('board is invalid')
+        else:     
+            self.clear_frame()
+            self.make_entries()
+ 
 
     def reset(self):
         self.board = [['*' for _ in range(9)] for _ in range(9)]
