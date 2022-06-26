@@ -1,4 +1,3 @@
-from time import sleep
 
 class Tricks:
 
@@ -44,7 +43,8 @@ class Tricks:
                 if value_map[value][0] == 1:
                    row = value_map[value][1][0]
                    self.board[row][column] = value
-                   del self.empty_cells[row][column]
+                   try: del self.empty_cells[row][column]
+                   except Exception: pass
                    self.update_candidate_set(row,column,value)
 
         for block in self.blocks:
